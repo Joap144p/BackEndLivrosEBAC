@@ -35,18 +35,25 @@ def apresentacao():
 @app.get("/livros")
 def get_livros():
     if not livros:
-        return{"message":"Não existe nenhum livro"}
+        return{"message":"Não existe nenhum livro cadastrado!"}
     else:
-        return{'livros':livros}
+        return  {'livros':livros}
+#Mostrando apenas um livro
+@app.get("/livros_unicos/{id_livro}")
+def get_umlivro(id_livro: int):
+    if id_livro not in livros:
+        raise HTTPException(status_code=404, detail="Nenhum livro encontrado com esse ID!")
+    else:
+        return {"Livro":livros[id_livro]}
 
 #Adicionando um livro
 @app.post('/adiciona')
 def post_livros(id_livro: int, livro:Livro):
     if id_livro in livros:
-        raise HTTPException(status_code=400, detail="Esse livro já existe, meu amigo!")
+        raise HTTPException(status_code=400, detail="Este ID de livro já está cadastrado!")
     else:
         livros[id_livro] = livro.model_dump()
-        return{'message':'Livro adicionado com sucesso'}
+        return{'message':'Livro cadastrado com sucesso'}
 
 #Atualizando algum livro
 @app.put('/Atualizar/{id_livro}')
@@ -55,14 +62,14 @@ def put_livros(id_livro: int, livro:Livro):
     if not meu_livro:
         raise HTTPException(status_code=404, detail='Esse livro não existe!')
     else:
-        meu_livro[id_livro] = livro.model_dump()
+        livros[id_livro] = livro.model_dump()
         return{'message':'As informações do seu livros foram atualizadas com sucesso!'}
 
 #Deletando um livro
 @app.delete('/Deletar/{id_livro}')
 def delete_livro(id_livro: int):
     if id_livro not in livros:
-        raise HTTPException(status_code=404, detail='Esse livro não foi encontrado!')
+        raise HTTPException(status_code=404, detail='Nenhum livro encontrado com esse ID!')
     else:
         del livros[id_livro]
         return{'message':'Seu livro foi deletado com sucesso!'}

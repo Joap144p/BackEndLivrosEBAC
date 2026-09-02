@@ -12,6 +12,8 @@
 #Update
 #Delete
 
+#Documentação swagger: Uma documentação técnica, mostrando os endpoints da nossa API.
+
 #Bibliotecas e Classificações
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
@@ -22,7 +24,15 @@ class Livro(BaseModel):
     autor_livro: str
     ano_livro: int
 
-app = FastAPI()
+app = FastAPI(
+    title='API de Livros',
+    description='API para gerenciar catálogos de livros',
+    version='1.3.0',
+    contact={
+        "name":'João Antônio',
+        'email':'joaoantonio.coiado.silveira@gmail.com'
+    }
+)
 
 livros = {}
 
